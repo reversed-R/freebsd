@@ -3422,4 +3422,11 @@
 		    int flags
 		);
 	}
+603	AUE_NULL	STD|CAPENABLED {
+		int signalfd(
+		    int fd,
+		    sigset_t *mask,
+		    int flags
+		);
+	}
 ; vim: syntax=off
