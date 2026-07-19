@@ -1926,6 +1926,11 @@ struct renameat2_args {
 	char new_l_[PADL_(const char *)]; const char * new; char new_r_[PADR_(const char *)];
 	char flags_l_[PADL_(int)]; int flags; char flags_r_[PADR_(int)];
 };
+struct signalfd_args {
+	char fd_l_[PADL_(int)]; int fd; char fd_r_[PADR_(int)];
+	char mask_l_[PADL_(sigset_t *)]; sigset_t * mask; char mask_r_[PADR_(sigset_t *)];
+	char flags_l_[PADL_(int)]; int flags; char flags_r_[PADR_(int)];
+};
 int	sys__exit(struct thread *, struct _exit_args *);
 int	sys_fork(struct thread *, struct fork_args *);
 int	sys_read(struct thread *, struct read_args *);
@@ -2335,6 +2340,7 @@ int	sys_jail_remove_jd(struct thread *, struct jail_remove_jd_args *);
 int	sys_pdrfork(struct thread *, struct pdrfork_args *);
 int	sys_pdwait(struct thread *, struct pdwait_args *);
 int	sys_renameat2(struct thread *, struct renameat2_args *);
+int	sys_signalfd(struct thread *, struct signalfd_args *);
 
 #ifdef COMPAT_43
 
@@ -3336,6 +3342,7 @@ int	freebsd14_setgroups(struct thread *, struct freebsd14_setgroups_args *);
 #define	SYS_AUE_pdrfork	AUE_PDRFORK
 #define	SYS_AUE_pdwait	AUE_PDWAIT
 #define	SYS_AUE_renameat2	AUE_RENAMEAT
+#define	SYS_AUE_signalfd	AUE_NULL
 
 #undef PAD_
 #undef PADL_
