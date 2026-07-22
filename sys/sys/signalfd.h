@@ -2,6 +2,7 @@
 #define _SYS_SIGNALFD_H_
 
 #include <sys/types.h>
+#include <sys/fcntl.h>
 
 struct signalfd_siginfo {
 	uint32_t ssi_signo;    /* Signal number */
@@ -26,5 +27,9 @@ struct signalfd_siginfo {
 	uint8_t pad[40]; /* Pad size to 128 bytes (allow for additional fields
 			   in the future) */
 };
+
+/* Creation flags. */
+#define SFD_NONBLOCK O_NONBLOCK
+#define SFD_CLOEXEC  O_CLOEXEC
 
 #endif /* !_SYS_SIGNALFD_H_ */
