@@ -37,9 +37,6 @@
 #ifndef _SYS_PROC_H_
 #define _SYS_PROC_H_
 
-#include <sys/callout.h> /* For struct callout. */
-#include <sys/event.h>	 /* For struct klist. */
-#include <sys/selinfo.h>
 #ifdef _KERNEL
 #include <sys/_eventhandler.h>
 #endif
@@ -50,6 +47,8 @@
 #endif
 #include <sys/_lock.h>
 #include <sys/_mutex.h>
+#include <sys/callout.h> /* For struct callout. */
+#include <sys/event.h>	 /* For struct klist. */
 #include <sys/lock_profile.h>
 #include <sys/osd.h>
 #include <sys/priority.h>
@@ -67,6 +66,7 @@
 #endif
 #include <sys/types.h>
 #include <sys/_domainset.h>
+#include <sys/selinfo.h>
 #include <sys/ucontext.h>
 #include <sys/ucred.h>
 
