@@ -92,6 +92,8 @@
 
 #include <security/audit/audit.h>
 
+#include "sys/selinfo.h"
+
 #define ONSIG 32 /* NSIG for osig* syscalls.  XXX. */
 
 SDT_PROVIDER_DECLARE(proc);
@@ -2309,6 +2311,8 @@ tdsendsignal(struct proc *p, struct thread *td, int sig, ksiginfo_t *ksi)
 
 	ps = p->p_sigacts;
 	KNOTE_LOCKED(p->p_klist, NOTE_SIGNAL | sig);
+	wakeup(&p->p_signalfd_sel);
+	selwakeup(&p->p_signalfd_sel);
 	prop = sigprop(sig);
 
 	if (td == NULL) {

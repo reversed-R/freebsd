@@ -9,6 +9,7 @@
 
 #include "security/audit/audit.h"
 #include "sys/filedesc.h"
+#include "sys/selinfo.h"
 #include "sys/signalvar.h"
 #include "sys/syscallsubr.h"
 #include "sys/systm.h"
@@ -97,10 +98,21 @@ static int
 signalfd_poll(struct file *fp, int events, struct ucred *active_cred,
     struct thread *td)
 {
+	struct proc *p = td->td_proc;
 	struct signalfd *sfd = fp->f_data;
+	sigset_t pending;
 	int revents = 0;
 
-	// TODO:
+	PROC_LOCK(p);
+	if (events & (POLLIN | POLLRDNORM)) {
+		pending = p->p_siglist;
+		SIGSETAND(pending, sfd->sfd_mask);
+		if (SIGNOTEMPTY(pending))
+			revents |= events & (POLLIN | POLLRDNORM);
+	}
+	if (revents == 0)
+		selrecord(td, &p->p_signalfd_sel);
+	PROC_UNLOCK(p);
 
 	return (revents);
 }
