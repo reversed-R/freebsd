@@ -1,7 +1,9 @@
+// clangd-format off
+#include <sys/proc.h>
+// clangd-format on
 #include <sys/file.h>
 #include <sys/mutex.h>
 #include <sys/poll.h>
-#include <sys/proc.h>
 #include <sys/signalfd.h>
 #include <sys/socket.h>
 #include <sys/sysproto.h>
