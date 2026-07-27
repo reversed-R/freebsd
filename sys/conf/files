@@ -3991,6 +3991,7 @@ kern/sys_procdesc.c		standard
 kern/sys_process.c		standard
 kern/sys_socket.c		standard
 kern/sys_timerfd.c		standard
+kern/sys_signalfd.c		standard
 kern/syscalls.c			standard
 kern/sysv_ipc.c			standard
 kern/sysv_msg.c			optional sysvmsg
