@@ -39,6 +39,7 @@
 
 #include <sys/callout.h> /* For struct callout. */
 #include <sys/event.h>	 /* For struct klist. */
+#include <sys/selinfo.h>
 #ifdef _KERNEL
 #include <sys/_eventhandler.h>
 #endif
@@ -546,24 +547,25 @@ enum {
 #define TDP_BUFNEED	  0x00000008 /* Do not recurse into the buf flush */
 #define TDP_COWINPROGRESS 0x00000010 /* Snapshot copy-on-write in progress. */
 #define TDP_ALTSTACK	  0x00000020 /* Have alternate signal stack. */
-#define TDP_DEADLKTREAT	  0x00000040 /* Lock acquisition - deadlock treatment. \
-				      */
-#define TDP_NOFAULTING	 0x00000080  /* Do not handle page faults. */
-#define TDP_SIGFASTBLOCK 0x00000100  /* Fast sigblock active */
-#define TDP_OWEUPC	 0x00000200  /* Call addupc() at next AST. */
-#define TDP_ITHREAD	 0x00000400  /* Thread is an interrupt thread. */
-#define TDP_SYNCIO	 0x00000800  /* Local override, disable async i/o. */
-#define TDP_SCHED1	 0x00001000  /* Reserved for scheduler private use */
-#define TDP_SCHED2	 0x00002000  /* Reserved for scheduler private use */
-#define TDP_SCHED3	 0x00004000  /* Reserved for scheduler private use */
-#define TDP_SCHED4	 0x00008000  /* Reserved for scheduler private use */
-#define TDP_GEOM	 0x00010000  /* Settle GEOM before finishing syscall */
-#define TDP_SOFTDEP	 0x00020000  /* Stuck processing softdep worklist */
-#define TDP_NORUNNINGBUF 0x00040000  /* Ignore runningbufspace check */
-#define TDP_WAKEUP	 0x00080000  /* Don't sleep in umtx cond_wait */
-#define TDP_INBDFLUSH	 0x00100000  /* Already in BO_BDFLUSH, do not recurse */
-#define TDP_KTHREAD	 0x00200000  /* This is an official kernel thread */
-#define TDP_CALLCHAIN	 0x00400000  /* Capture thread's callchain */
+#define TDP_DEADLKTREAT                                                       \
+	0x00000040		    /* Lock acquisition - deadlock treatment. \
+				     */
+#define TDP_NOFAULTING	 0x00000080 /* Do not handle page faults. */
+#define TDP_SIGFASTBLOCK 0x00000100 /* Fast sigblock active */
+#define TDP_OWEUPC	 0x00000200 /* Call addupc() at next AST. */
+#define TDP_ITHREAD	 0x00000400 /* Thread is an interrupt thread. */
+#define TDP_SYNCIO	 0x00000800 /* Local override, disable async i/o. */
+#define TDP_SCHED1	 0x00001000 /* Reserved for scheduler private use */
+#define TDP_SCHED2	 0x00002000 /* Reserved for scheduler private use */
+#define TDP_SCHED3	 0x00004000 /* Reserved for scheduler private use */
+#define TDP_SCHED4	 0x00008000 /* Reserved for scheduler private use */
+#define TDP_GEOM	 0x00010000 /* Settle GEOM before finishing syscall */
+#define TDP_SOFTDEP	 0x00020000 /* Stuck processing softdep worklist */
+#define TDP_NORUNNINGBUF 0x00040000 /* Ignore runningbufspace check */
+#define TDP_WAKEUP	 0x00080000 /* Don't sleep in umtx cond_wait */
+#define TDP_INBDFLUSH	 0x00100000 /* Already in BO_BDFLUSH, do not recurse */
+#define TDP_KTHREAD	 0x00200000 /* This is an official kernel thread */
+#define TDP_CALLCHAIN	 0x00400000 /* Capture thread's callchain */
 #define TDP_IGNSUSP	 0x00800000 /* Permission to ignore the MNTK_SUSPEND* */
 #define TDP_AUDITREC	 0x01000000 /* Audit record pending on thread */
 #define TDP_RFPPWAIT	 0x02000000 /* Handle RFPPWAIT on syscall exit */
@@ -1187,9 +1189,10 @@ struct fork_req {
 #define PGET_CANDEBUG  0x00004 /* Check against p_candebug(). */
 #define PGET_ISCURRENT 0x00008 /* Check that the found process is current. */
 #define PGET_NOTWEXIT  0x00010 /* Check that the process is not in P_WEXIT. */
-#define PGET_NOTINEXEC 0x00020 /* Check that the process is not in P_INEXEC. \
-				*/
-#define PGET_NOTID    0x00040  /* Do not assume tid if pid > PID_MAX. */
+#define PGET_NOTINEXEC                                                      \
+	0x00020		      /* Check that the process is not in P_INEXEC. \
+			       */
+#define PGET_NOTID    0x00040 /* Do not assume tid if pid > PID_MAX. */
 
 #define PGET_WANTREAD (PGET_HOLD | PGET_CANDEBUG | PGET_NOTWEXIT)
 
