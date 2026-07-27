@@ -69,6 +69,7 @@ signalfd_read(struct file *fp, struct uio *uio, struct ucred *active_cred,
 		return (EINVAL);
 
 	PROC_LOCK(p);
+retry:
 	for (int i = 1; i <= _SIG_MAXSIG; i++) {
 		if (SIGISMEMBER(sfd->sfd_mask, i) &&
 		    SIGISMEMBER(p->p_siglist, i)) {
@@ -76,22 +77,30 @@ signalfd_read(struct file *fp, struct uio *uio, struct ucred *active_cred,
 			break;
 		}
 	}
-	if (sig != 0)
-		sigqueue_get(&p->p_sigqueue, sig, &ksi);
+
+	if (sig == 0) {
+		if (fp->f_flag & FNONBLOCK) {
+			/* nonblocking */
+			PROC_UNLOCK(p);
+			return (EAGAIN);
+		} else {
+			/* blocking */
+			error = msleep(&p->p_signalfd_sel, &p->p_mtx, PCATCH,
+			    "sfdrd", 0);
+			if (error == 0)
+				goto retry;
+			PROC_UNLOCK(p);
+			return (error);
+		}
+	}
+
+	sigqueue_get(&p->p_sigqueue, sig, &ksi);
 	PROC_UNLOCK(p);
 
-	if (sig != 0) {
-		bzero(&si, sizeof(struct signalfd_siginfo));
-		siginfo_from_ksiginfo(&si, &ksi);
-		error = uiomove(&si, sizeof(struct signalfd_siginfo), uio);
-		return (error);
-	} else {
-		if (fp->f_flag & FNONBLOCK)
-			return (EAGAIN);
-		else
-			/* TODO: blocking */
-			return (EAGAIN);
-	}
+	bzero(&si, sizeof(struct signalfd_siginfo));
+	siginfo_from_ksiginfo(&si, &ksi);
+	error = uiomove(&si, sizeof(struct signalfd_siginfo), uio);
+	return (error);
 }
 
 static int
