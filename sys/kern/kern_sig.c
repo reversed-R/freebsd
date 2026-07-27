@@ -57,10 +57,12 @@
 #include <sys/malloc.h>
 #include <sys/mutex.h>
 #include <sys/namei.h>
-#include <sys/posix4.h>
+// clangd-format off
 #include <sys/proc.h>
 #include <sys/procdesc.h>
 #include <sys/ptrace.h>
+// clangd-format on
+#include <sys/posix4.h>
 #include <sys/racct.h>
 #include <sys/refcount.h>
 #include <sys/resourcevar.h>
