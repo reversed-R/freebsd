@@ -128,6 +128,18 @@ signalfd_poll(struct file *fp, int events, struct ucred *active_cred,
 	return (revents);
 }
 
+static int
+signalfd_close(struct file *fp, struct thread *td)
+{
+	struct signalfd *sfd = fp->f_data;
+
+	mtx_destroy(&sfd->sfd_lock);
+	free(sfd, M_SIGNALFD);
+	fp->f_ops = &badfileops;
+
+	return (0);
+}
+
 static const struct fileops signalfdops = {
 	.fo_read = signalfd_read,
 	.fo_write = invfo_rdwr,
@@ -136,7 +148,7 @@ static const struct fileops signalfdops = {
 	.fo_poll = signalfd_poll,
 	// .fo_kqfilter = signalfd_kqfilter,
 	// .fo_stat = signalfd_stat,
-	// .fo_close = signalfd_close,
+	.fo_close = signalfd_close,
 	.fo_chmod = invfo_chmod,
 	.fo_chown = invfo_chown,
 	.fo_sendfile = invfo_sendfile,
