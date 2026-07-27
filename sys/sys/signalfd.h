@@ -3,6 +3,8 @@
 
 #include <sys/types.h>
 #include <sys/fcntl.h>
+#include <sys/proc.h>
+#include <sys/sysproto.h>
 
 struct signalfd_siginfo {
 	uint32_t ssi_signo;    /* Signal number */
@@ -31,5 +33,7 @@ struct signalfd_siginfo {
 /* Creation flags. */
 #define SFD_NONBLOCK O_NONBLOCK
 #define SFD_CLOEXEC  O_CLOEXEC
+
+int sys_signalfd(struct thread *td, struct signalfd_args *uap);
 
 #endif /* !_SYS_SIGNALFD_H_ */
